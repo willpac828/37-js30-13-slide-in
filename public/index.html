@@ -61,11 +61,28 @@
     const sliderImages = document.querySelectorAll('.slide-in');
 
     function checkSlide(e) {
-      console.log(window.scrollY)
       sliderImages.forEach(sliderImage => {
+        // why not addition?
+        // halfway through the image (this is the only line that I'm not one hundred percent on board with)
+        // slideInAt refers to the TOP of the image when you've scrolled halfway through the image
+        // it keeps increasing as you continue to scroll through the image, and isHalfShown is true when you scroll past half the image
+        const slideInAt = (window.scrollY + window.innerHeight) - (sliderImage.height / 2);
+        // bottom of the image
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        // ok this makes sense. if the distance down minus half the image height is greater than image offset top, then we've moved
+        // halfway through the element
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        // declaring these conditions as variables instead of directly in the if statement
+        if(isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active')
+        } else {
+          sliderImage.classList.remove('active')
 
+        }
       })
     }
+
 
     window.addEventListener('scroll', debounce(checkSlide));
 
@@ -114,10 +131,10 @@
     }
 
     .align-left.slide-in {
-      transform:translateX(-30%) scale(0.95);
+      transform:translateX(-10%) scale(0.95);
     }
     .align-right.slide-in {
-      transform:translateX(30%) scale(0.95);
+      transform:translateX(10%) scale(0.95);
     }
 
     .slide-in.active {
